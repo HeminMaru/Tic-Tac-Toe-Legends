@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FA28D353"
+    tools:context=".HomePage">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        tools:layout_editor_absoluteX="-32dp"
+        tools:layout_editor_absoluteY="20dp">
+
+        <TextView
+            android:id="@+id/Username_display_TextView"
+            android:layout_width="181dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="casual"
+            android:text="UserName"
+            android:textAlignment="center"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/scoreTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="0dp"
+            android:background="@android:drawable/editbox_background"
+            android:drawableRight="@drawable/coinbal"
+            android:drawablePadding="10dp"
+            android:fontFamily="casual"
+            android:gravity="right"
+            android:text="99999"
+            android:textAlignment="textEnd"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/ProfileButton"
+            android:layout_width="63dp"
+            android:layout_height="75dp"
+            android:adjustViewBounds="false"
+            android:background="@drawable/avtar1"
+            android:cropToPadding="false"
+            android:onClick="profileSetting"
+            android:scaleType="fitXY"
+            tools:srcCompat="@drawable/avtar1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="167dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="450dp"
+            android:layout_marginBottom="74dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/imageButton2"
+                    android:layout_width="180dp"
+                    android:layout_height="87dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:backgroundTint="#00FFFFFF"
+                    android:onClick="goToNext"
+                    android:scaleType="fitXY"
+                    android:textAlignment="inherit"
+                    android:textDirection="inherit"
+                    app:srcCompat="@drawable/button" />
+
+                <ImageButton
+                    android:id="@+id/imageButton4"
+                    android:layout_width="180dp"
+                    android:layout_height="87dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#00FFFFFF"
+                    android:onClick="goToNext"
+                    android:scaleType="fitXY"
+                    android:textAlignment="inherit"
+                    android:textDirection="inherit"
+                    app:srcCompat="@drawable/button" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button3"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button"
+                    android:backgroundTint="#0FCDDC39"
+                    android:fontFamily="casual"
+                    android:foreground="@drawable/button"
+                    android:text="Earn 500 coins" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="292dp"
+            android:layout_marginTop="80dp"
+            app:srcCompat="@drawable/tictacttoestart" />
+
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
