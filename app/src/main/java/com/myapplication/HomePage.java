@@ -9,13 +9,24 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class HomePage extends AppCompatActivity {
     Intent intent;
-    public  void goToNext(View view) {
+    TextView usernameDisplay;
+
+    public  void passnplay(View view) {
         intent = new Intent(getApplicationContext(),MainActivity.class);
+        intent.putExtra("passnplay",true);
+        startActivity(intent);
+    }
+    public  void playwithai(View view) {
+        intent = new Intent(getApplicationContext(),MainActivity.class);
+        intent.putExtra("passnplay",false);
         startActivity(intent);
     }
     public void profileSetting(View view) {
@@ -34,9 +45,11 @@ public class HomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         getSupportActionBar().hide();
-        TextView usernameDisplay = findViewById(R.id.Username_display_TextView);
+        usernameDisplay = findViewById(R.id.Username_display_TextView);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         usernameDisplay.setText(user.getDisplayName());
+
     }
+
 }

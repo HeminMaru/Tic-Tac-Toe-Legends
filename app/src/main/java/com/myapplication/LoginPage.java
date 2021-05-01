@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,67 +51,46 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
         else {
             if (!isreg) {
                 mAuth.signInWithEmailAndPassword(Email_ID.getText().toString().trim(), Password.getText().toString().trim())
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Intent intent = new Intent(getApplicationContext(), HomePage.class);
-                                    startActivity(intent);
-                                    Toast.makeText(LoginPage.this, "Logged in Successfully!", Toast.LENGTH_SHORT).show();
-                                    FirebaseUser user = mAuth.getCurrentUser();
+                        .addOnCompleteListener(this, task -> {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Intent intent = new Intent(getApplicationContext(), HomePage.class);
+                                startActivity(intent);
+                                Toast.makeText(LoginPage.this, "Logged in Successfully!", Toast.LENGTH_SHORT).show();
+                                FirebaseUser user = mAuth.getCurrentUser();
 
-                                } else {
-                                    Toast.makeText(LoginPage.this,task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(LoginPage.this,task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
-                                }
                             }
                         });
             } else {
                 mAuth.createUserWithEmailAndPassword(Email_ID.getText().toString().trim(), Password.getText().toString().trim())
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(LoginPage.this, "Registered Successfully!", Toast.LENGTH_SHORT).show();
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                            .setDisplayName(User_Name.getText().toString().trim()).build();
-                                    user.updateProfile(profileUpdates).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(LoginPage.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                    assert user != null;
-                                    user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Toast.makeText(LoginPage.this, "Verification mail sent successfully", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(LoginPage.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                    isreg = !isreg;
-                                    Button reglogin = findViewById(R.id.regloginButton);
-                                    TextView ChangeText = findViewById(R.id.switchTextView);
-                                    TextView aboveChangeText = findViewById(R.id.aboveswitchTextView);
-                                    reglogin.setText("Log in");
-                                    aboveChangeText.setText("Don't have an Account?");
-                                    ChangeText.setText("Click here to register!");
-                                    Forgot_Pass.setVisibility(View.VISIBLE);
-                                    User_Name.setVisibility(View.INVISIBLE);
-                                    Email_ID.setText("");
-                                    Password.setText("");
-                                    mAuth.signOut();
+                        .addOnCompleteListener(this, task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(LoginPage.this, "Registered Successfully!", Toast.LENGTH_SHORT).show();
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(User_Name.getText().toString().trim()).build();
+                                user.updateProfile(profileUpdates).addOnFailureListener(e -> Toast.makeText(LoginPage.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                                assert user != null;
+                                user.sendEmailVerification().addOnSuccessListener(aVoid -> Toast.makeText(LoginPage.this, "Verification mail sent successfully", Toast.LENGTH_SHORT).show()).addOnFailureListener(e -> Toast.makeText(LoginPage.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                                isreg = !isreg;
+                                Button reglogin = findViewById(R.id.regloginButton);
+                                TextView ChangeText = findViewById(R.id.switchTextView);
+                                TextView aboveChangeText = findViewById(R.id.aboveswitchTextView);
+                                reglogin.setText("Log in");
+                                aboveChangeText.setText("Don't have an Account?");
+                                ChangeText.setText("Click here to register!");
+                                Forgot_Pass.setVisibility(View.VISIBLE);
+                                User_Name.setVisibility(View.INVISIBLE);
+                                Email_ID.setText("");
+                                Password.setText("");
+                                mAuth.signOut();
 
-                                } else{
-                                    Toast.makeText(LoginPage.this,task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            } else{
+                                Toast.makeText(LoginPage.this,task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
-                                }
                             }
                         });
             }
@@ -153,60 +133,37 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
                     .setTitle("Reset Password")
                     .setMessage("Enter an email you used during registration.")
                     .setView(input)
-                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            String value = String.valueOf(input.getText());
-                            mAuth = FirebaseAuth.getInstance();
-                            mAuth.sendPasswordResetEmail(value)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Toast.makeText(LoginPage.this, "Password Reset mail sent successfully.", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(LoginPage.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                     })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // Canceled.
-                        }
+                    .setPositiveButton("Confirm", (dialog, whichButton) -> {
+                        String value = String.valueOf(input.getText());
+                        mAuth = FirebaseAuth.getInstance();
+                        mAuth.sendPasswordResetEmail(value)
+                                .addOnSuccessListener(aVoid -> Toast.makeText(LoginPage.this, "Password Reset mail sent successfully.", Toast.LENGTH_SHORT).show()).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(LoginPage.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    })
+                    .setNegativeButton("Cancel", (dialog, whichButton) -> {
+                        // Canceled.
                     }).show();
         }
     }
-    @Override
-    public void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            Intent intent = new Intent(getApplicationContext(), HomePage.class);
-            startActivity(intent);
-        }
-    }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_page);
-        getSupportActionBar().hide();
-        mAuth = FirebaseAuth.getInstance();
-        signInButton =findViewById(R.id.googleSignInButton);
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(
-                GoogleSignInOptions.DEFAULT_SIGN_IN
-        ).requestIdToken("140723331381-b33s2cvle4tnkhpp7304fapv7uicu15a.apps.googleusercontent.com")
-                .requestEmail()
-                .build();
-        googleSignInClient = GoogleSignIn.getClient(LoginPage.this, googleSignInOptions);
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = googleSignInClient.getSignInIntent();
-                startActivityForResult(intent,100);
-            }
-        });
+
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Intent intent = new Intent(getApplicationContext(), HomePage.class);
+                        startActivity(intent);
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Toast.makeText(LoginPage.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
@@ -222,21 +179,44 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
                     GoogleAuthCredential googleAuthCredential = (GoogleAuthCredential) GoogleAuthProvider
                             .getCredential(googleSignInAccount.getIdToken(),null);
                     mAuth.signInWithCredential(googleAuthCredential);
+                    firebaseAuthWithGoogle(googleSignInAccount.getIdToken());
+                    Toast.makeText(this, "Google Sign in Successfull", Toast.LENGTH_SHORT).show();
                 } catch (ApiException e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(this, "Google Sign in Successfull", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), HomePage.class);
-                startActivity(intent);
+
             }else if(googleSignInAccountTask.isCanceled()) {
                 Toast.makeText(this, "Google Sign in revoked", Toast.LENGTH_SHORT).show();
             }
-            googleSignInAccountTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(LoginPage.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+            googleSignInAccountTask.addOnFailureListener(e -> Toast.makeText(LoginPage.this, e.getMessage(), Toast.LENGTH_SHORT).show());
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            Intent intent = new Intent(getApplicationContext(), HomePage.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login_page);
+        getSupportActionBar().hide();
+        mAuth = FirebaseAuth.getInstance();
+        signInButton =findViewById(R.id.googleSignInButton);
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("140723331381-b33s2cvle4tnkhpp7304fapv7uicu15a.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
+        googleSignInClient = GoogleSignIn.getClient(LoginPage.this, googleSignInOptions);
+        signInButton.setOnClickListener(v -> {
+            Intent intent = googleSignInClient.getSignInIntent();
+            startActivityForResult(intent,100);
+        });
     }
 }

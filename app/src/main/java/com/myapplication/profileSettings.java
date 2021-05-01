@@ -5,13 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,10 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,61 +23,38 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.InputStream;
-
 import static com.google.firebase.auth.EmailAuthProvider.getCredential;
 
 public class profileSettings extends AppCompatActivity {
     FirebaseAuth mAuth;
-
+    AlertDialog avatardialog;
     EditText email_update,pass,username_update;
     Button update,cancel;
+    String ProfilePhoto;
+    ImageView counter;
     ImageButton emailUpdatebutton, usernameUpdatebutton, avatar_ImageButton;
     FirebaseStorage storage;
     StorageReference storageReference;
-    String ProfilePhoto;
-    ImageView counter;
-    AlertDialog avatardialog;
+
     public void PassReset(View view) {
         FirebaseUser user = mAuth.getCurrentUser();
         mAuth.sendPasswordResetEmail(user.getEmail())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(profileSettings.this, "Password Reset mail sent successfully.", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(profileSettings.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                .addOnSuccessListener(aVoid -> Toast.makeText(profileSettings.this, "Password Reset mail sent successfully.", Toast.LENGTH_SHORT).show()).addOnFailureListener(e -> Toast.makeText(profileSettings.this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
    public void logout(View view) {
        new AlertDialog.Builder(profileSettings.this)
                .setTitle("Log Out")
                .setMessage("Are you sure you want to log out?")
-               .setPositiveButton("Log out", new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int which) {
-                       mAuth.signOut();
-                       Intent intent = new Intent(getApplicationContext(),LoginPage.class);
-                       startActivity(intent);
-                   }
+               .setPositiveButton("Log out", (dialog, which) -> {
+                   mAuth.signOut();
+                   Intent intent = new Intent(getApplicationContext(),LoginPage.class);
+                   startActivity(intent);
                })
                .setNegativeButton("Cancel", null)
                .setIcon(android.R.drawable.ic_dialog_alert)
                .show();
    }
-
-
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(getApplicationContext(), HomePage.class);
-        startActivity(intent);
-    }
 
     public void showemailDialog() {
         TextView email = findViewById(R.id.email_TextView);
@@ -100,48 +69,23 @@ public class profileSettings extends AppCompatActivity {
         emailalert.setView(Mview);
         AlertDialog emaildialog = emailalert.create();
         emaildialog.show();
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!(email_update.getText().toString().matches("") || pass.getText().toString().matches(""))) {
-                    AuthCredential credential = getCredential(user.getEmail(), pass.getText().toString());
-                    user.reauthenticate(credential)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                    user.updateEmail(email_update.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Toast.makeText(profileSettings.this, "Email Updated Successfully", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(profileSettings.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(profileSettings.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else {
-                    Toast.makeText(profileSettings.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
-                }
-                emaildialog.dismiss();
+        update.setOnClickListener(v -> {
+            if(!(email_update.getText().toString().matches("") || pass.getText().toString().matches(""))) {
+                AuthCredential credential = getCredential(user.getEmail(), pass.getText().toString());
+                user.reauthenticate(credential)
+                        .addOnSuccessListener(aVoid -> {
+                            FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
+                            user1.updateEmail(email_update.getText().toString()).addOnSuccessListener(aVoid1 -> Toast.makeText(profileSettings.this, "Email Updated Successfully", Toast.LENGTH_SHORT).show()).addOnFailureListener(e -> Toast.makeText(profileSettings.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                        }).addOnFailureListener(e -> Toast.makeText(profileSettings.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+            } else {
+                Toast.makeText(profileSettings.this, "Some fields are empty", Toast.LENGTH_SHORT).show();
             }
+            emaildialog.dismiss();
         });
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                emaildialog.dismiss();
-            }
-        });
+        cancel.setOnClickListener(v -> emaildialog.dismiss());
         email.setText(user.getEmail());
     }
+
     public void showusernameDialog() {
         TextView username = findViewById(R.id.displayname_textView);
         FirebaseUser user = mAuth.getCurrentUser();
@@ -154,33 +98,15 @@ public class profileSettings extends AppCompatActivity {
         usernamealert.setView(Mview);
         AlertDialog usernamedialog = usernamealert.create();
         usernamedialog.show();
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                        .setDisplayName(username_update.getText().toString())
-                        .build();
-                user.updateProfile(profileUpdates).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(profileSettings.this, "Username updated successFully", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(profileSettings.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-                usernamedialog.dismiss();
-                username.setText(user.getDisplayName());
-            }
+        update.setOnClickListener(v -> {
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(username_update.getText().toString())
+                    .build();
+            user.updateProfile(profileUpdates).addOnSuccessListener(aVoid -> Toast.makeText(profileSettings.this, "Username updated successFully", Toast.LENGTH_SHORT).show()).addOnFailureListener(e -> Toast.makeText(profileSettings.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+            usernamedialog.dismiss();
+            username.setText(user.getDisplayName());
         });
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                usernamedialog.dismiss();
-            }
-        });
+        cancel.setOnClickListener(v -> usernamedialog.dismiss());
 
     }
     /*
@@ -243,6 +169,15 @@ public class profileSettings extends AppCompatActivity {
         avatar_ImageButton.setBackground(d);
     }
 */
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(getApplicationContext(), HomePage.class);
+        startActivity(intent);
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         profileSettings.super.onCreate(savedInstanceState);
@@ -259,26 +194,10 @@ public class profileSettings extends AppCompatActivity {
         FirebaseUser user = mAuth.getCurrentUser();
         email.setText(user.getEmail());
         username.setText(user.getDisplayName());
-        usernameUpdatebutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showusernameDialog();
-            }
-        });
+        usernameUpdatebutton.setOnClickListener(v -> showusernameDialog());
 
-        emailUpdatebutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showemailDialog();
-            }
+        emailUpdatebutton.setOnClickListener(v -> showemailDialog());
+        //avatar_ImageButton.setOnClickListener(v -> showavatardialog(v));
 
-        });
-        /*avatar_ImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showavatardialog(v);
-            }
-        });
-         */
     }
 }

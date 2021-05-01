@@ -11,14 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="20dp"
-        tools:layout_editor_absoluteX="-32dp"
-        tools:layout_editor_absoluteY="20dp">
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="-17dp">
 
         <TextView
             android:id="@+id/Username_display_TextView"
             android:layout_width="181dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
+            android:layout_marginStart="70dp"
             android:layout_marginTop="10dp"
             android:fontFamily="casual"
             android:text="UserName"
@@ -32,13 +32,13 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="0dp"
             android:background="@android:drawable/editbox_background"
-            android:drawableRight="@drawable/coinbal"
             android:drawablePadding="10dp"
             android:fontFamily="casual"
-            android:gravity="right"
+            android:gravity="end"
             android:text="99999"
             android:textAlignment="textEnd"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            app:drawableEndCompat="@drawable/coinbal" />
 
         <ImageButton
             android:id="@+id/ProfileButton"
@@ -46,6 +46,7 @@
             android:layout_height="75dp"
             android:adjustViewBounds="false"
             android:background="@drawable/avtar1"
+            android:contentDescription="Profile settings"
             android:cropToPadding="false"
             android:onClick="profileSetting"
             android:scaleType="fitXY"
@@ -53,10 +54,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="167dp"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/imageView"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="450dp"
-            android:layout_marginBottom="74dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginBottom="30dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -68,30 +70,29 @@
                     android:id="@+id/imageButton2"
                     android:layout_width="180dp"
                     android:layout_height="87dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:backgroundTint="#00FFFFFF"
-                    android:onClick="goToNext"
+                    android:onClick="passnplay"
                     android:scaleType="fitXY"
                     android:textAlignment="inherit"
                     android:textDirection="inherit"
-                    app:srcCompat="@drawable/button" />
+                    app:srcCompat="@drawable/passnplay" />
 
                 <ImageButton
                     android:id="@+id/imageButton4"
-                    android:layout_width="180dp"
+                    android:layout_width="0dp"
                     android:layout_height="87dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:backgroundTint="#00FFFFFF"
-                    android:onClick="goToNext"
+                    android:onClick="playwithai"
                     android:scaleType="fitXY"
                     android:textAlignment="inherit"
                     android:textDirection="inherit"
-                    app:srcCompat="@drawable/button" />
+                    app:srcCompat="@drawable/playwithai" />
 
             </LinearLayout>
 
@@ -103,14 +104,14 @@
                 <Button
                     android:id="@+id/button3"
                     style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/button"
                     android:backgroundTint="#0FCDDC39"
                     android:fontFamily="casual"
-                    android:foreground="@drawable/button"
+                    android:foreground="@drawable/earncoin"
                     android:text="Earn 500 coins" />
             </LinearLayout>
         </LinearLayout>

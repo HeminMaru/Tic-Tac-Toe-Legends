@@ -1,17 +1,11 @@
 package com.myapplication;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
-import android.view.View;
 
-import static java.lang.Thread.sleep;
-
-//import static bolts.Task.delay;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class Starter extends AppCompatActivity {
     @Override
@@ -21,14 +15,12 @@ public class Starter extends AppCompatActivity {
         getSupportActionBar().hide();
         MediaPlayer bgAudio = MediaPlayer.create(this , R.raw.bgmusic);
         Handler handler = new Handler();
-        Runnable myRunnable = new Runnable() {
-            public void run() {
-                bgAudio.setLooping(true);
-                bgAudio.start();
-                Intent intent = new Intent(getApplicationContext(),LoginPage.class);
-                startActivity(intent);
-                finish();
-            }
+        Runnable myRunnable = () -> {
+            bgAudio.setLooping(true);
+            bgAudio.start();
+            Intent intent = new Intent(getApplicationContext(),LoginPage.class);
+            startActivity(intent);
+            finish();
         };
         handler.postDelayed(myRunnable, 3000);
 
